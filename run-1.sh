@@ -54,6 +54,12 @@ curl -H "Content-Type: application/json" -X POST -d '{"nftTokenName":"SILVER", "
 printf "\n"
 sleep 1
 
+printf "\n4. Checker wallet now tries to find ALL NFT in both wallets.\n"
+read -n1 -r -p "Press any key to continue..." key
+curl -H "Content-Type: application/json" -X POST -d '{"hW":{"getWalletId": '$HolderWB'}}' http://localhost:9080/api/contract/instance/$CheckerW_IID/endpoint/findAllNFT
+printf "\n"
+sleep 1
+
 printf "\nThank you for your time.\n"
 printf "\n"
 
