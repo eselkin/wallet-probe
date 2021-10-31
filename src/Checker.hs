@@ -74,7 +74,7 @@ findAllNFT allParam = do
         thirdIsSingular :: (CurrencySymbol, b, Integer) -> Bool
         thirdIsSingular (_,_,x) = x == 1
         nonAdaToken :: (CurrencySymbol, b, Integer) -> Bool
-        nonAdaToken (x,y,z) = x == ""
+        nonAdaToken (x,y,z) = x /= ""
         operation :: String -> (CurrencySymbol, b, Integer) -> Bool
         operation "third" = thirdIsSingular
         operation       _ = nonAdaToken
