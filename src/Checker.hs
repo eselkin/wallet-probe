@@ -48,17 +48,16 @@ type CheckerSchema =  Endpoint "findNFT" FindParam
 
 findNFT :: forall w s e. AsContractError e => FindParam -> Contract w s e ()
 findNFT param = do
-    pkh <- pubKeyHash <$> ownPubKey
     logInfo @String $ "INSIDE"
     let w  = holderWallet param
         iw = issuerWallet param
         tn = TokenName $ stringToBuiltinByteString (nftTokenName param)
         nftAssetClass = AssetClass (I.issuerCS $ (pubKeyHash . walletPubKey) iw, tn)
     os  <- map snd . Map.toList <$> utxosAt (walletAddress w)
-    let nftVal = mconcat [view ciTxOutValue o | o <- os, nf (view ciTxOutValue o) nftAssetClass]
-        qty = assetClassValueOf (nftVal) nftAssetClass
+    let nftVal = mconcat [flattenValue $ view ciTxOutValue o | o <- os, nf (view ciTxOutValue o) nftAssetClass]
+        qty = length nftVal
     logInfo @String $ "Searching for NFT " <> (show nftAssetClass)
-    logInfo @String $ "Find NFT result - " ++ (if qty == 0 then "NOT FOUND" else "FOUND")
+    logInfo @String $ "Find NFT result - " ++ (if qty == 0 then "NOT FOUND " else "FOUND ") ++ show qty
     where
       nf val ac = assetClassValueOf val ac == 1
 

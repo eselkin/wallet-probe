@@ -34,6 +34,8 @@ printf "\n"
 curl -H "Content-Type: application/json" -X POST -d '{"tn":"GOLD", "destW":{"getWalletId": '$HolderWA'}}' http://localhost:9080/api/contract/instance/$IssuerW_IID/endpoint/mint
 sleep 2
 curl -H "Content-Type: application/json" -X POST -d '{"tn":"SILVER", "destW":{"getWalletId": '$HolderWB'}}' http://localhost:9080/api/contract/instance/$IssuerW_IID/endpoint/mint
+sleep 2
+curl -H "Content-Type: application/json" -X POST -d '{"tn":"SILVER", "destW":{"getWalletId": '$HolderWB'}}' http://localhost:9080/api/contract/instance/$IssuerW_IID/endpoint/mint
 sleep 1
 
 printf "\n3. Checker wallet now tries to find GOLD NFT in both wallets. You'll see in pab server logs that NFT is found inside wallet A only.\n"
