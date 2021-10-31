@@ -56,7 +56,7 @@ sleep 1
 
 printf "\n4. Checker wallet now tries to find ALL NFT in both wallets.\n"
 read -n1 -r -p "Press any key to continue..." key
-curl -H "Content-Type: application/json" -X POST -d '{"hW":{"getWalletId": '$HolderWB'}}' http://localhost:9080/api/contract/instance/$CheckerW_IID/endpoint/findAllNFT
+curl -H "Content-Type: application/json" -X POST -d '{"hW":{"getWalletId": '$HolderWB'}, "checkMethod": ""}' http://localhost:9080/api/contract/instance/$CheckerW_IID/endpoint/findAllNFT
 printf "\n"
 sleep 1
 

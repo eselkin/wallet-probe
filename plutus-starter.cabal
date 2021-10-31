@@ -58,7 +58,9 @@ library
       text,
       utf8-string,
       plutus-ledger-api,
-      lens
+      lens,
+      time,
+      split
     hs-source-dirs: src examples/src
 
 test-suite plutus-example-projects-test

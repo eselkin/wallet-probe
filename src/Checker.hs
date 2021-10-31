@@ -40,6 +40,7 @@ data FindParam = FindParam
 
 data FindAllNFTParam = FindAllNFTParam 
     { hW :: Wallet
+    , checkMethod :: String
     } deriving (Generic, ToJSON, FromJSON, ToSchema)
 
 type CheckerSchema =  Endpoint "findNFT" FindParam 
@@ -65,14 +66,18 @@ findAllNFT :: forall w s e. AsContractError e => FindAllNFTParam -> Contract w s
 findAllNFT allParam = do
     logInfo @String $ "Checking for all NFTs"
     let h = hW allParam
+        opType = checkMethod allParam
     os  <- map snd . Map.toList <$> utxosAt (walletAddress h)
-    let nftVal = mconcat [ flattenValue $ view ciTxOutValue o | o <- os, fv <- flattenValue $ view ciTxOutValue o, nonAdaToken fv]
+    let nftVal = mconcat [ flattenValue $ view ciTxOutValue o | o <- os, fv <- flattenValue $ view ciTxOutValue o, operation opType fv]
     logInfo @String $ "Searching for all NFT " <> (show nftVal)
     where 
-        thirdIsSingular :: (a, b, Integer) -> Bool
+        thirdIsSingular :: (CurrencySymbol, b, Integer) -> Bool
         thirdIsSingular (_,_,x) = x == 1
-        nonAdaToken :: (CurrencySymbol, b, c) -> Bool
-        nonAdaToken (x,y,z) = x /= ""
+        nonAdaToken :: (CurrencySymbol, b, Integer) -> Bool
+        nonAdaToken (x,y,z) = x == ""
+        operation :: String -> (CurrencySymbol, b, Integer) -> Bool
+        operation "third" = thirdIsSingular
+        operation       _ = nonAdaToken
 
 findNFT' :: Promise () CheckerSchema Text ()
 findNFT' = endpoint @"findNFT" findNFT
